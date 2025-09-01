@@ -116,7 +116,7 @@
             </goals>
             <configuration>
               <file>${project.basedir}/solr/build/solr-core/solr-core-${project.version}.jar</file>
-              <groupId>org.apache.solr</groupId>
+              <groupId>org.apache.lucene-solr</groupId>
               <artifactId>solr-core</artifactId>
               <version>${project.version}</version>
               <packaging>jar</packaging>
@@ -132,7 +132,7 @@
             </goals>
             <configuration>
               <file>${project.basedir}/solr/build/solr-solrj/solr-solrj-${project.version}.jar</file>
-              <groupId>org.apache.solr</groupId>
+              <groupId>org.apache.lucene-solr</groupId>
               <artifactId>solr-solrj</artifactId>
               <version>${project.version}</version>
               <packaging>jar</packaging>
@@ -163,7 +163,7 @@
                 </goals>
                 <configuration>
                   <file>${project.basedir}/solr/build/solr-core/solr-core-${project.version}.jar</file>
-                  <groupId>org.apache.solr</groupId>
+                  <groupId>org.apache.lucene-solr</groupId>
                   <artifactId>solr-core</artifactId>
                   <version>${project.version}</version>
                   <packaging>jar</packaging>
@@ -179,7 +179,7 @@
                 </goals>
                 <configuration>
                   <file>${project.basedir}/solr/build/solr-solrj/solr-solrj-${project.version}.jar</file>
-                  <groupId>org.apache.solr</groupId>
+                  <groupId>org.apache.lucene-solr</groupId>
                   <artifactId>solr-solrj</artifactId>
                   <version>${project.version}</version>
                   <packaging>jar</packaging>

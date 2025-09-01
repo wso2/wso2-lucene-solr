@@ -25,7 +25,7 @@
   </parent>
   <groupId>org.apache.lucene-solr</groupId>
   <artifactId>lucene-solr-parent</artifactId>
-  <version>8.11.4-wso2v4-SNAPSHOT</version>
+  <version>8.11.4-wso2v4</version>
   <packaging>pom</packaging>
   <name>WSO2 Lucene / Solr fork</name>
 
@@ -33,7 +33,7 @@
     <url>https://github.com/wso2/wso2-lucene-solr.git</url>
     <developerConnection>scm:git:https://github.com/wso2/wso2-lucene-solr.git</developerConnection>
     <connection>scm:git:https://github.com/wso2/wso2-lucene-solr.git</connection>
-    <tag>HEAD</tag>
+    <tag>v8.11.4-wso2v4</tag>
   </scm>
 
   <build>

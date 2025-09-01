@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.wso2</groupId>
     <artifactId>wso2</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
   </parent>
   <groupId>org.apache.lucene-solr</groupId>
   <artifactId>lucene-solr-parent</artifactId>
@@ -106,33 +106,38 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-install-plugin</artifactId>
-        <version>3.1.1</version>
-
+        <artifactId>maven-deploy-plugin</artifactId>
         <executions>
           <execution>
-            <id>install-solr-core</id>
-            <phase>install</phase>
-            <goals><goal>install-file</goal></goals>
+            <id>deploy-solr-core</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy-file</goal>
+            </goals>
             <configuration>
               <file>${project.basedir}/solr/build/solr-core/solr-core-${project.version}.jar</file>
               <groupId>org.apache.solr</groupId>
               <artifactId>solr-core</artifactId>
               <version>${project.version}</version>
               <packaging>jar</packaging>
+              <url>${project.distributionManagement.snapshotRepository.url}</url>
+              <repositoryId>${project.distributionManagement.snapshotRepository.id}</repositoryId>
             </configuration>
           </execution>
-
           <execution>
-            <id>install-solr-solrj</id>
-            <phase>install</phase>
-            <goals><goal>install-file</goal></goals>
+            <id>deploy-solr-solrj</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy-file</goal>
+            </goals>
             <configuration>
               <file>${project.basedir}/solr/build/solr-solrj/solr-solrj-${project.version}.jar</file>
               <groupId>org.apache.solr</groupId>
               <artifactId>solr-solrj</artifactId>
               <version>${project.version}</version>
               <packaging>jar</packaging>
+              <url>${project.distributionManagement.snapshotRepository.url}</url>
+              <repositoryId>${project.distributionManagement.snapshotRepository.id}</repositoryId>
             </configuration>
           </execution>
         </executions>
@@ -140,6 +145,54 @@
 
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>wso2-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>deploy-solr-core</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy-file</goal>
+                </goals>
+                <configuration>
+                  <file>${project.basedir}/solr/build/solr-core/solr-core-${project.version}.jar</file>
+                  <groupId>org.apache.solr</groupId>
+                  <artifactId>solr-core</artifactId>
+                  <version>${project.version}</version>
+                  <packaging>jar</packaging>
+                  <url>${project.distributionManagement.repository.url}</url>
+                  <repositoryId>${project.distributionManagement.repository.id}</repositoryId>
+                </configuration>
+              </execution>
+              <execution>
+                <id>deploy-solr-solrj</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy-file</goal>
+                </goals>
+                <configuration>
+                  <file>${project.basedir}/solr/build/solr-solrj/solr-solrj-${project.version}.jar</file>
+                  <groupId>org.apache.solr</groupId>
+                  <artifactId>solr-solrj</artifactId>
+                  <version>${project.version}</version>
+                  <packaging>jar</packaging>
+                  <url>${project.distributionManagement.repository.url}</url>
+                  <repositoryId>${project.distributionManagement.repository.id}</repositoryId>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <properties>
     <version>${project.version}</version>

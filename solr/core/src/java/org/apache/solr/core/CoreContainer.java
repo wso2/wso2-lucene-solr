@@ -364,6 +364,7 @@ public class CoreContainer {
     this.allowPaths = new java.util.HashSet<>();
     this.allowPaths.add(cfg.getSolrHome());
     this.allowPaths.add(cfg.getCoreRootDirectory());
+    this.allowPaths.add(cfg.getConfigSetBaseDirectory());
     if (cfg.getSolrDataHome() != null) {
       this.allowPaths.add(cfg.getSolrDataHome());
     }
@@ -796,7 +797,7 @@ public class CoreContainer {
     metricManager.loadReporters(metricReporters, loader, this, null, null, SolrInfoBean.Group.jvm);
     metricManager.loadReporters(metricReporters, loader, this, null, null, SolrInfoBean.Group.jetty);
 
-    coreConfigService = ConfigSetService.createConfigSetService(cfg, loader, zkSys.zkController);
+    coreConfigService = ConfigSetService.createConfigSetService(cfg, loader, zkSys.zkController, this);
 
     containerProperties.putAll(cfg.getSolrProperties());
 
@@ -1309,6 +1310,10 @@ public class CoreContainer {
         log.warn(msg);
         throw new SolrException(ErrorCode.CONFLICT, msg);
       }
+
+      // Validate 'instancePath' prior to instantiating CoreDescriptor, as CD construction
+      // attempts to read properties from 'instancePath'
+      assertPathAllowed(instancePath);
       CoreDescriptor cd = new CoreDescriptor(coreName, instancePath, parameters, getContainerProperties(), getZkController());
 
       // Since the core descriptor is removed when a core is unloaded, it should never be anywhere when a core is created.
@@ -1319,7 +1324,6 @@ public class CoreContainer {
       }
 
       // Validate paths are relative to known locations to avoid path traversal
-      assertPathAllowed(cd.getInstanceDir());
       assertPathAllowed(Paths.get(cd.getDataDir()));
 
       boolean preExisitingZkEntry = false;

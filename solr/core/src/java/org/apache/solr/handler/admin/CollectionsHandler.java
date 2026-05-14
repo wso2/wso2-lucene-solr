@@ -35,10 +35,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.util.SuppressForbidden;
 import org.apache.solr.api.Api;
 import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -196,7 +198,9 @@ public class CollectionsHandler extends RequestHandlerBase implements Permission
     String action = ctx.getParams().get("action");
     if (action == null) return PermissionNameProvider.Name.COLL_READ_PERM;
     CollectionParams.CollectionAction collectionAction = CollectionParams.CollectionAction.get(action);
-    if (collectionAction == null) return null;
+    if (collectionAction == null) {
+      throw new SolrException(SolrException.ErrorCode.BAD_REQUEST, "Unknown action: " + action);
+    }
     return collectionAction.isWrite ?
         PermissionNameProvider.Name.COLL_EDIT_PERM :
         PermissionNameProvider.Name.COLL_READ_PERM;

@@ -98,8 +98,10 @@ public class SchemaHandler extends RequestHandlerBase implements SolrCoreAware, 
       } catch (IOException e) {
         throw new SolrException(SolrException.ErrorCode.BAD_REQUEST, "Error reading input String " + e.getMessage(), e);
       }
-    } else {
+    } else if ("GET".equals(httpMethod)) {
       handleGET(req, rsp);
+    } else {
+      throw getUnexpectedHttpMethodException(httpMethod);
     }
   }
 
@@ -113,8 +115,14 @@ public class SchemaHandler extends RequestHandlerBase implements SolrCoreAware, 
       case "POST":
         return PermissionNameProvider.Name.SCHEMA_EDIT_PERM;
       default:
-        return null;
+        throw getUnexpectedHttpMethodException(ctx.getHttpMethod());
     }
+  }
+
+  public static SolrException getUnexpectedHttpMethodException(String methodName)
+          throws SolrException {
+    return new SolrException(
+            SolrException.ErrorCode.BAD_REQUEST, "Unexpected HTTP method: " + methodName);
   }
 
   private void handleGET(SolrQueryRequest req, SolrQueryResponse rsp) {

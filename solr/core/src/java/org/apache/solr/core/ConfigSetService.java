@@ -55,9 +55,10 @@ public abstract class ConfigSetService {
 
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  public static ConfigSetService createConfigSetService(NodeConfig nodeConfig, SolrResourceLoader loader, ZkController zkController) {
+  public static ConfigSetService createConfigSetService(NodeConfig nodeConfig, SolrResourceLoader loader,
+                                                        ZkController zkController, CoreContainer cc) {
     if (zkController == null) {
-      return new Standalone(loader, nodeConfig.hasSchemaCache(), nodeConfig.getConfigSetBaseDirectory());
+      return new Standalone(loader, nodeConfig.hasSchemaCache(), nodeConfig.getConfigSetBaseDirectory(), cc);
     } else {
       return new CloudConfigSetService(loader, nodeConfig.hasSchemaCache(), zkController);
     }
@@ -223,10 +224,12 @@ public abstract class ConfigSetService {
   public static class Standalone extends ConfigSetService {
 
     private final Path configSetBase;
+    private final CoreContainer cc;
 
-    public Standalone(SolrResourceLoader loader, boolean shareSchema, Path configSetBase) {
+    public Standalone(SolrResourceLoader loader, boolean shareSchema, Path configSetBase, CoreContainer cc) {
       super(loader, shareSchema);
       this.configSetBase = configSetBase;
+      this.cc = cc;
     }
 
     @Override
@@ -245,6 +248,7 @@ public abstract class ConfigSetService {
       if (configSet == null)
         return cd.getInstanceDir();
       Path configSetDirectory = configSetBase.resolve(configSet);
+      cc.assertPathAllowed(configSetDirectory);
       if (!Files.isDirectory(configSetDirectory))
         throw new SolrException(SolrException.ErrorCode.SERVER_ERROR,
             "Could not load configuration from directory " + configSetDirectory);
